@@ -6,7 +6,7 @@ This library is still a work in progress. Some methods may be incomplete, poorly
 
 ## Purpose
 
-Students often face restrictions on Java programming assignments that would make the use of unit testing software such as JUnit impractical. This library offers a single standalone file that can be transferred into the assignment test file without interfering with grading scripts. The goal is to reduce the time spent worrying about the formatting of test output, so that more time can be spent writing quality tests. API is based on the Unity syntax.
+Students often face restrictions on Java programming assignments that would make the use of unit testing software such as JUnit impractical. This library offers a single standalone file that can be transferred into the assignment test file without interfering with grading scripts. The goal is to reduce the time spent worrying about the formatting of test output, so that more time can be spent writing quality tests. API is based on the [Unity](http://www.throwtheswitch.org/unity/) syntax.
 
 ## Sample Output
 ![Output](sample-output.png)
