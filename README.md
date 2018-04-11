@@ -2,7 +2,7 @@
 
 ## Note
 
-This library is still a work in progress. Some methods may be incomplete, poorly implemented, or wrong. Take this into consideration if you observe unexpected behavior. To use this library in your final submission, copy the contents of [`Test.java`](src/Test.java) including the associated imports into your test file. Make the class private/nested.
+This library is still a work in progress. Some methods may be incomplete, poorly implemented, or wrong. Take this into consideration if you observe unexpected behavior. To use this library in your final submission, copy the contents of [Test.java](src/Test.java) including the associated imports into your test file. Make the class private/nested.
 
 ## Purpose
 
@@ -29,7 +29,7 @@ Students often face restrictions on Java programming assignments that would make
 
 ## Basic API
 
-Javadocs are provided in the source code. See [tests](tests/) for usage examples.
+Javadocs are provided in the source code. See [Tester.java](tests/Tester.java) for usage examples.
 
 ```java
 void BEGIN()
