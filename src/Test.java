@@ -38,8 +38,9 @@ public class Test {
             end();
         } catch (Exception e) {
             System.out.printf("%-20s", "[" + ANSI_RED + "EXCEPT" + ANSI_RESET + "]");
-            System.out.printf("%s", e.getStackTrace()[1].getMethodName());
-            System.out.printf("%s - %s\n", e.getClass().getName(), e.getMessage());
+            StackTraceElement trace = e.getStackTrace()[0];
+            System.out.printf("%s:%d", trace.getFileName(), trace.getLineNumber());
+            System.out.printf(" - %s - %s\n", e.getClass().getName(), e.getMessage());
 
             while (!testMessages.isEmpty()) {
                 System.out.println(testMessages.poll());
@@ -48,7 +49,7 @@ public class Test {
     }
 
     /**
-     * Call this before beginning unit testing
+     * Call this before beginning unit testing.
      */
     public static void BEGIN() {
         String file = Thread.currentThread().getStackTrace()[2].getFileName();
@@ -56,7 +57,7 @@ public class Test {
     }
 
     /**
-     * Optionally call this after running unit tests
+     * Call this after testing. Currently does nothing important
      */
     public static void END() {
         System.exit(0);
@@ -79,12 +80,26 @@ public class Test {
             System.out.println();
     }
 
+    private static StackTraceElement[] readStack() {
+        StackTraceElement[] traces;
+        try {
+            traces = Thread.currentThread().getStackTrace();
+        } catch (ArrayIndexOutOfBoundsException e) {
+            throw new IllegalStateException(
+                    "Couldn't read stack trace - make sure main() calls RUN_TEST with test as parameter");
+        }
+        return traces;
+    }
+
     private static String function() {
         return currentFunc;
     }
 
     private static void initTest() {
-        StackTraceElement trace = Thread.currentThread().getStackTrace()[4];
+
+        StackTraceElement[] stack = readStack();
+        StackTraceElement trace = stack[stack.length - 3];
+
         currentFunc = trace.getMethodName();
         currentLine = trace.getLineNumber();
         currentFile = trace.getFileName();
@@ -111,7 +126,7 @@ public class Test {
 
         String failMsg = currentFile + ":" + currentLine;
         if (expected != null || actual != null) {
-            failMsg = String.format("Expected %s within %s, was %s", expected.toString(), delta.toString(),
+            failMsg = String.format(failMsg + " - Expected %s within %s, was %s", expected.toString(), delta.toString(),
                     actual.toString());
         }
         if (message != null) {
@@ -128,14 +143,26 @@ public class Test {
      * @param actual    Actual value, actual != null
      * @param message   A descriptive message to be printed if the test fails
      * 
-     * post: Difference between expected and actual computed using expected.comapreTo(acutal)
+     * post: Difference between expected and actual computed using expected.comapreTo(actual)
      */
     public static <T extends Comparable<T>> void ASSERT_NUM_WITHIN_MESSAGE(Double delta, T expected, T actual,
             String message) {
         initTest();
         if (Math.abs(expected.compareTo(actual)) > delta)
             handleFailedTestWithin(delta, expected, actual, message);
+    }
 
+    /**
+    * Test that two values are within a given delta when compared using compareTo
+    * 
+    * @param delta     The maximum allowed difference between expected and actual. delta > 0
+    * @param expected  Expected value, expected != null
+    * @param actual    Actual value, actual != null
+    * 
+    * post: Difference between expected and actual computed using expected.comapreTo(actual)
+    */
+    public static <T extends Comparable<T>> void ASSERT_NUM_WITHIN(Double delta, T expected, T actual) {
+        ASSERT_NUM_WITHIN_MESSAGE(delta, expected, actual, null);
     }
 
     /**
@@ -292,6 +319,7 @@ public class Test {
 
         private static final int NUM_SIZE_STEPS = 5;
         private static final int MAX_THREADS = 20;
+        private static final int NANOS_PER_SEC = 1_000_000_000;
 
         private Function<Integer, E> supplier;
         private BiConsumer<Integer, E> operation;
@@ -326,7 +354,7 @@ public class Test {
 
             // Reset total counter and generate input data
             ThreadMXBean bean = ManagementFactory.getThreadMXBean();
-            double average = 0;
+            long total = 0;
             E input = supplier.apply(size);
             if (!bean.isCurrentThreadCpuTimeSupported()) {
                 throw new UnsupportedOperationException();
@@ -336,9 +364,9 @@ public class Test {
             for (int test = 0; test < numTrials; test++) {
                 long start = bean.getCurrentThreadCpuTime();
                 operation.accept(size, input);
-                average += (double) (bean.getCurrentThreadCpuTime() - start) / numTrials / NANOS_PER_SEC * 1000;
+                total = Math.addExact(total, Math.subtractExact(bean.getCurrentThreadCpuTime(), start));
             }
-            return average;
+            return (double) total / numTrials * 1000 / NANOS_PER_SEC;
         }
 
         private void prepareThreads() {
