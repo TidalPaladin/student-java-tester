@@ -63,6 +63,7 @@ void ASSERT_WITHIN_TIMEOUT_MESSAGE(double time_ms, Runnable operation, String me
 
 ## TODO List
 
+  * Allow for custom number of size trials in `TIME_EXPERIMENT`. Is is currently hardcoded at five doublings.
   * Test name resolution relies on poorly implemented analysis of the stack. No obvious use of reflection will resolve names of the lambda parameters of `RUN_TEST`. For now, function name resolution will produce unexpected results if method calls are used that produce a substantially different stack bottom than those in Tester.java 
   * Big O benchmarking needs a more efficient distribution of threaded workload
   * Big O benchmarking needs continued verification of validity. The results seem erradic
