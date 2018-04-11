@@ -67,7 +67,11 @@ public class Tester {
     public static void test5_fail_assert_equal() {
         int expected = 10;
         int actual = 12;
+
+        // Multiple assertions are allowed in one test
+        Test.ASSERT_EQUAL(expected, expected);
         Test.ASSERT_EQUAL_MESSAGE(expected, actual, "OK, This should have failed!");
+        Test.ASSERT_EQUAL_MESSAGE(expected, actual, "OK, showing that you can see every assertion that failed!");
     }
 
     public static void test6_fail_assert_true() {
