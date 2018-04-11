@@ -1,3 +1,4 @@
+
 /**
  *  Demonstration / Tests for student-java-tester
  * 
@@ -108,7 +109,7 @@ public class Tester {
 
         double timeout_ms = 1000;
         Test.ASSERT_WITHIN_TIMEOUT(timeout_ms, nSquared);
-        Test.ASSERT_WITHIN_TIMEOUT_MESSAGE(timeout_ms/10, nSquared, "OK, This should have failed");
+        Test.ASSERT_WITHIN_TIMEOUT_MESSAGE(timeout_ms / 10, nSquared, "OK, This should have failed");
     }
 
     public static void test11_pass_equal_objects() {
@@ -144,7 +145,7 @@ public class Tester {
             return result;
         };
 
-        int repeats_for_given_size = 100;
+        int repeats_for_given_size = 10000;
         int initial_arraylist_size = 100000;
         Test.TIME_EXPERIMENT(repeats_for_given_size, initial_arraylist_size, arrayListGenerator,
                 Tester::arraylist_test);
@@ -154,7 +155,7 @@ public class Tester {
     // Non-lambda function representing the test that should be run on the arraylist generated above
     private static void arraylist_test(Integer size, ArrayList<Integer> data) {
         data.add(0, 0);
-        data.remove(data.size()-1);
+        data.remove(data.size() - 1);
     }
 
     public static void time_arraylist_get() {
@@ -174,9 +175,8 @@ public class Tester {
             data.get(0);
         };
 
-        int repeats_for_given_size = 10000;
+        int repeats_for_given_size = 100000;
         int initial_arraylist_size = 100000;
-        Test.TIME_EXPERIMENT(repeats_for_given_size, initial_arraylist_size, arrayListGenerator,
-               get);
+        Test.TIME_EXPERIMENT(repeats_for_given_size, initial_arraylist_size, arrayListGenerator, get);
     }
 }
