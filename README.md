@@ -26,6 +26,40 @@ Students often face restrictions on Java programming assignments that would make
   As with Unity, appending MESSAGE to any assertion call will allow for the addition of a
   helpful description of what failed
 
+## Basic API
+
+Javadocs are provided in the source code. See [tests](tests) for usage examples.
+
+```java
+void BEGIN()
+void END()
+
+void RUN_TEST(Runnable test)
+
+<T extends Comparable>> void ASSERT_NUM_WITHIN(Double delta, T expected, T actual)
+<T extends Comparable>> void ASSERT_NUM_WITHIN_MESSAGe(Double delta, T expected, T actual, String mesage)
+
+void ASSERT_EQUAL(Object expected, Object actual)
+void ASSERT_EQUAL_MESSAGE(Object expected, Object actual, String message)
+
+void ASSERT_NULL(Object actual)
+void ASSERT_NULL_MESSAGE(Object actual, String message)
+
+void ASSERT_TRUE(boolean actual)
+void ASSERT_TRUE_MESSAGE(boolean actual, String message)
+
+void ASSERT_FALSE(boolean actual)
+void ASSERT_FALSE_MESSAGE(boolean actual, String message)
+
+void ASSERT_WITHIN_TIMEOUT(double time_ms, Runnable operation)
+void ASSERT_WITHIN_TIMEOUT_MESSAGE(double time_ms, Runnable operation, String message)
+
+// Generates a data structure using supplier. Supplier is passed the size of the data structure that needs to be created
+// Averages times for 'num_trials' repeats of operation, with 5 size doublings. Lowest size is initial_size.
+<E> void TIME_EXPERIMENT(int num_trials, int initial_size, Function<Integer, E> supplier, BiConsumer<Integer, E> operation)
+```
+
+
 ## TODO List
 
   * Big O benchmarking needs a more efficient distribution of threaded workload
